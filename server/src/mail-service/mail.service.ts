@@ -27,4 +27,16 @@ export class EmailService {
 
     await this.transporter.sendMail(mailOptions);
   }
+
+  async sendBusinessVerificationEmail(email: string, token: string) {
+    const verificationUrl = `${token}`;
+    const mailOptions = {
+      from: process.env.COMPANY_EMAIL,
+      to: email,
+      subject: 'Verification Email For Business',
+      text: `Click on the following link to verify your account: ${verificationUrl}`,
+    };
+
+    await this.transporter.sendMail(mailOptions);
+  }
 }

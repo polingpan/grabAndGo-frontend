@@ -41,3 +41,29 @@ export class LoginDto {
   @IsString()
   password: string;
 }
+
+export class CreateBusinessUserDto {
+  @IsNotEmpty()
+  @IsString()
+  storeName: string;
+
+  @IsNotEmpty()
+  @IsEmail()
+  email: string;
+
+  @IsBoolean()
+  @IsOptional()
+  isActive?: boolean = true;
+
+  @IsNotEmpty()
+  @IsString()
+  phoneNumber: string;
+
+  @IsNotEmpty()
+  @IsString()
+  storeAddress: string;
+
+  @IsOptional()
+  @IsString()
+  password?: string;
+}
