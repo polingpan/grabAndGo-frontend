@@ -1,0 +1,211 @@
+body {
+    margin: 0;
+}
+
+.homeHeader {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    background-color: #fcfaf1;
+    transition:
+        background-color 0.3s ease,
+        height 0.3s ease,
+        padding 0.3s ease;
+    z-index: 1000;
+    height: auto;
+    box-shadow: none;
+
+    .headerContent {
+        max-width: 1250px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        //padding: 0 20px;
+        margin: 0 auto;
+        height: auto;
+    }
+}
+
+.homeHeader.scrolled {
+    background-color: #c8c5b2;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    height: 70px;
+    align-content: center;
+
+    .logoContainer {
+        height: auto;
+        top: -2px;
+    }
+
+    .logo {
+        width: 90%;
+        height: 90%;
+    }
+
+    .navbar {
+        height: 72px;
+    }
+}
+
+.logoContainer {
+    width: 100px;
+    height: 100px;
+}
+
+.logo {
+    width: 100%;
+    height: 100%;
+}
+
+.navbar {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100px;
+}
+
+.navLinks {
+    list-style: none;
+    display: flex;
+    gap: 40px;
+}
+
+.navLinks li {
+    display: inline;
+}
+
+.navLinks a {
+    text-decoration: none;
+    font-size: 15px;
+    color: #333;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.navLinks a:hover {
+    color: #58704a;
+}
+
+.signUpBtnContainer {
+    display: flex;
+    //justify-content: flex-end;
+    gap: 15px;
+
+    a {
+        text-decoration: none;
+    }
+}
+
+.signUpBtn {
+    padding: 10px 30px;
+    border: 1px solid black;
+    background-color: transparent;
+    color: black;
+    font-size: 15px;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.signUpBtn .arrow {
+    margin-left: 10px;
+    font-size: 18px;
+    transition: transform 0.3s ease;
+}
+
+.signUpBtn:hover {
+    color: #58704a;
+    border: 1px solid #58704a;
+}
+
+.signUpBtn:hover .arrow {
+    transform: translateX(5px);
+}
+
+.sectionContainer {
+    background-color: #fcfaf1;
+
+    .section {
+        max-width: 1250px;
+        padding: 0 40px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+.tryNow {
+    background-color: #c8c5b2;
+
+    .tryNowContainer {
+        padding: 30px;
+        display: grid;
+        grid-template-columns: 4.5fr 3fr 4fr;
+        max-width: 1250px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .tryItNow {
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        justify-content: center;
+        align-items: center;
+    }
+
+    h3 {
+        font-weight: 300;
+        width: 350px;
+    }
+
+    h1 {
+        font-size: 4rem;
+    }
+
+    .downloadBtn {
+        img {
+            height: 40px;
+        }
+    }
+
+    .appImg {
+        width: 300px;
+    }
+}
+
+.steps {
+    text-align: center;
+
+    h2 {
+        font-size: 40px;
+        font-weight: 900;
+        position: relative;
+        display: inline-block;
+        padding-bottom: 10px;
+    }
+
+    &_1,
+    &_2,
+    &_3 {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        &::after {
+            content: '';
+            display: block;
+            width: 50%;
+            height: 1px;
+            background-color: black;
+            margin-top: 30px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    }
+}
