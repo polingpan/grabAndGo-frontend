@@ -28,26 +28,26 @@ function Home() {
                     <nav className="navbar">
                         <ul className="navLinks">
                             <li>
-                                <a href="#about">ABOUT US</a>
+                                <a href="#about">關於我們</a>
                             </li>
                             <li>
                                 <a href="#how-it-works">BUSINESS SOLUTIONS</a>
                             </li>
                             <li>
-                                <a href="#contact">CONTACT US</a>
+                                <a href="#contact">聯絡我們</a>
                             </li>
                         </ul>
                         <div className="logoContainer">
-                            <img src="/logo3.png" alt="Business Logo" className="logo" />
+                            <img src="/logo3.png" alt="Business Logo" className="logo"/>
                         </div>
                         <div className="signUpBtnContainer">
                             <button className="signUpBtn">
-                                DOWNLOAD APP
+                                下載 GRAB & GO APP
                                 <span className="arrow">→</span>
                             </button>
                             <a href="/create-account">
                                 <button className="signUpBtn">
-                                    BUSINESS SIGN-UP
+                                    商家註冊
                                     <span className="arrow">→</span>
                                 </button>
                             </a>
@@ -84,10 +84,10 @@ function Home() {
                         <h1>Try It Now</h1>
                         <Box className="downloadBtn">
                             <Button>
-                                <img src="/appStore.svg" alt="" />
+                                <img src="/appStore.svg" alt=""/>
                             </Button>
                             <Button>
-                                <img src="/googlePlay.png" alt="" />
+                                <img src="/googlePlay.png" alt=""/>
                             </Button>
                         </Box>
                     </Box>
