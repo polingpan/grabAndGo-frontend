@@ -38,7 +38,7 @@ function Home() {
                             </li>
                         </ul>
                         <div className="logoContainer">
-                            <img src="/logo3.png" alt="Business Logo" className="logo"/>
+                            <img src="/logo3.png" alt="Business Logo" className="logo" />
                         </div>
                         <div className="signUpBtnContainer">
                             <button className="signUpBtn">
@@ -84,10 +84,10 @@ function Home() {
                         <h1>Try It Now</h1>
                         <Box className="downloadBtn">
                             <Button>
-                                <img src="/appStore.svg" alt=""/>
+                                <img src="/appStore.svg" alt="" />
                             </Button>
                             <Button>
-                                <img src="/googlePlay.png" alt=""/>
+                                <img src="/googlePlay.png" alt="" />
                             </Button>
                         </Box>
                     </Box>

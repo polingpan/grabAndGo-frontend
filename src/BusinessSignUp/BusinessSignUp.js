@@ -1,116 +1,121 @@
-import {useRef, useEffect, useState} from 'react';
-import CallIcon from '@mui/icons-material/Call';
-import PlaceIcon from '@mui/icons-material/Place';
-import EditIcon from '@mui/icons-material/Edit';
-import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
-import './businessSignUp.scss';
-import {Checkbox} from "@mui/material";
-import * as yup from "yup";
-import {ErrorMessage, Field, Form, Formik} from "formik";
-
+import {useRef, useEffect, useState} from 'react'
+import CallIcon from '@mui/icons-material/Call'
+import PlaceIcon from '@mui/icons-material/Place'
+import EditIcon from '@mui/icons-material/Edit'
+import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined'
+import './businessSignUp.scss'
+import {Checkbox} from '@mui/material'
+import * as yup from 'yup'
+import {ErrorMessage, Field, Form, Formik} from 'formik'
+import axios from 'axios'
 
 function BusinessSignUp() {
-    const autocompleteRef = useRef(null);
-    const [storeDetails, setStoreDetails] = useState(null);
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [mapUrl, setMapUrl] = useState(null);
-    const [editMode, setEditMode] = useState(false);
-    const [editableDetails, setEditableDetails] = useState({name: '', address: '', phone: ''});
-    const [isEmailSectionVisible, setIsEmailSectionVisible] = useState(false);
-    const [email, setEmail] = useState('');
-    const [emailSubmitted, setEmailSubmitted] = useState(false);
+    const autocompleteRef = useRef(null)
+    const [storeDetails, setStoreDetails] = useState(null)
+    const [isDialogOpen, setIsDialogOpen] = useState(false)
+    const [mapUrl, setMapUrl] = useState(null)
+    const [editMode, setEditMode] = useState(false)
+    const [editableDetails, setEditableDetails] = useState({name: '', address: '', phone: ''})
+    const [isEmailSectionVisible, setIsEmailSectionVisible] = useState(false)
+    const [emailSubmitted, setEmailSubmitted] = useState(false)
+    const [loading, setLoading] = useState(false)
 
     const emailSchema = yup.object().shape({
-        email: yup.string().required('此為必填欄位').email('請輸入有效電子郵件'),
-    });
+        email: yup.string().required('此為必填欄位').email('請輸入有效電子郵件')
+    })
 
     useEffect(() => {
-        const loadScript = (url) => {
+        const loadScript = url => {
             return new Promise((resolve, reject) => {
-                const script = document.createElement('script');
-                script.src = url;
-                script.async = true;
-                script.defer = true;
-                script.onload = resolve;
-                script.onerror = reject;
-                document.head.appendChild(script);
-            });
-        };
+                const script = document.createElement('script')
+                script.src = url
+                script.async = true
+                script.defer = true
+                script.onload = resolve
+                script.onerror = reject
+                document.head.appendChild(script)
+            })
+        }
 
         const loadGoogleMaps = async () => {
             try {
                 await loadScript(
                     `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_API_KEY}&libraries=places&language=zh-TW`
-                );
-                initializeAutocomplete();
+                )
+                initializeAutocomplete()
             } catch (error) {
-                console.error('Error loading Google Maps script:', error);
+                console.error('Error loading Google Maps script:', error)
             }
-        };
+        }
 
-        const initializeAutocomplete = () => {
+        const initializeAutocomplete = async () => {
             if (autocompleteRef.current) {
                 const autocomplete = new window.google.maps.places.Autocomplete(autocompleteRef.current, {
                     types: ['establishment'],
                     componentRestrictions: {country: 'TW'},
-                    fields: ['place_id', 'geometry', 'name', 'formatted_address', 'formatted_phone_number'],
-
-                });
+                    fields: ['place_id', 'geometry', 'name', 'formatted_address', 'formatted_phone_number']
+                })
 
                 autocomplete.addListener('place_changed', () => {
-                    const place = autocomplete.getPlace();
-                    console.log('Selected place:', place);
+                    const place = autocomplete.getPlace()
 
                     const store = {
-                        name: place.name || 'N/A',
-                        address: place.formatted_address || 'N/A',
-                        phone: place.formatted_phone_number || 'N/A',
-                        location: place.geometry?.location
-                    };
+                        storeName: place.name || 'N/A',
+                        storeAddress: place.formatted_address || 'N/A',
+                        phoneNumber: place.formatted_phone_number || 'N/A'
+                    }
 
-                    setStoreDetails(store);
-                    const lat = store.location.lat();
-                    const lng = store.location.lng();
-                    const staticMapUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${lat},${lng}&zoom=15&size=800x400&scale=2&maptype=roadmap&markers=color:red%7C${lat},${lng}&key=${process.env.REACT_APP_GOOGLE_API_KEY}`;
+                    const location = place.geometry?.location
+                    setStoreDetails(store)
+                    const lat = location.lat()
+                    const lng = location.lng()
+                    const staticMapUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${lat},${lng}&zoom=15&size=800x400&scale=2&maptype=roadmap&markers=color:red%7C${lat},${lng}&key=${process.env.REACT_APP_GOOGLE_API_KEY}`
 
-                    setMapUrl(staticMapUrl);
-                    setEditableDetails(store);
-                    setIsDialogOpen(true);
-                });
+                    setMapUrl(staticMapUrl)
+                    setEditableDetails(store)
+                    setIsDialogOpen(true)
+                })
             }
-        };
+        }
 
-        loadGoogleMaps();
-    }, []);
+        loadGoogleMaps()
+    }, [])
 
     const closeDialog = () => {
-        setIsDialogOpen(false);
-        setEditMode(false);
-        setIsEmailSectionVisible(true);
-    };
+        setIsDialogOpen(false)
+        setEditMode(false)
+        setIsEmailSectionVisible(true)
+    }
 
     const handleEdit = () => {
-        setEditMode(true);
-    };
+        setEditMode(true)
+    }
 
     const handleSave = () => {
-        setStoreDetails(editableDetails);
-        setEditMode(false);
-    };
+        setStoreDetails(editableDetails)
+        setEditMode(false)
+    }
 
-    const handleChange = (e) => {
-        const {name, value} = e.target;
-        setEditableDetails((prev) => ({...prev, [name]: value}));
-    };
+    const handleChange = e => {
+        const {name, value} = e.target
+        setEditableDetails(prev => ({...prev, [name]: value}))
+    }
 
-    const handleEmailChange = (e) => {
-        setEmail(e.target.value);
-    };
+    const handleEmailSubmit = async values => {
+        setLoading(true)
+        setEmailSubmitted(false)
+        const updatedStoreDetails = {...storeDetails, email: values.email}
+        setStoreDetails(updatedStoreDetails)
 
-    const handleEmailSubmit = () => {
-
-        setEmailSubmitted(true);
-    };
+        try {
+            const response = await axios.post(`http://localhost:8000/auth/business-Signup`, updatedStoreDetails)
+            setEmailSubmitted(true)
+        } catch (error) {
+            console.error('Error sending data to backend:', error)
+        } finally {
+            setLoading(false)
+        }
+    }
 
     return (
         <div className="pageWrapper">
@@ -121,7 +126,7 @@ function BusinessSignUp() {
                             <>
                                 <h2 className="heading">註冊您的商家</h2>
                                 <div id="place-picker-box">
-                                    <div id="place-picker-container" style={{textAlign: "left"}}>
+                                    <div id="place-picker-container" style={{textAlign: 'left'}}>
                                         <input
                                             ref={autocompleteRef}
                                             id="place-picker"
@@ -139,9 +144,9 @@ function BusinessSignUp() {
                             </>
                         ) : (
                             <Formik
-                                initialValues={{email: ""}}
+                                initialValues={{email: ''}}
                                 validationSchema={emailSchema}
-                                onSubmit={handleEmailSubmit}
+                                onSubmit={values => handleEmailSubmit(values)}
                             >
                                 {({isValid, dirty}) => (
                                     <Form className="emailSection">
@@ -156,7 +161,7 @@ function BusinessSignUp() {
                                             name="email"
                                             component="div"
                                             style={{
-                                                color: "red",
+                                                color: 'red',
                                                 textAlign: 'justify',
                                                 marginBottom: '1rem',
                                                 marginLeft: '0.5rem'
@@ -164,17 +169,18 @@ function BusinessSignUp() {
                                         />
 
                                         <div className="consentCheckbox">
-                                            <Checkbox/>
+                                            <Checkbox />
                                             <p>
-                                                我同意通過電子郵件、簡訊及推播通知接收來自 GRAB & GO 的資訊 (可以隨時取消訂閱)
+                                                我同意通過電子郵件、簡訊及推播通知接收來自 GRAB & GO 的資訊
+                                                (可以隨時取消訂閱)
                                             </p>
                                         </div>
                                         <button
                                             type="submit"
                                             className="loginBtn"
-                                            disabled={!isValid || !dirty}
+                                            disabled={!isValid || !dirty || loading}
                                         >
-                                            繼續
+                                            {loading ? <div className="spinner"></div> : '繼續'}
                                         </button>
                                     </Form>
                                 )}
@@ -187,80 +193,78 @@ function BusinessSignUp() {
                         </div>
                     )}
                 </div>
-
             </div>
 
             <div className="rightSection">
-                <img src="/grabAndGo.svg" alt="Visual" className="image"/>
+                <img src="/grabAndGo.svg" alt="Visual" className="image" />
             </div>
 
-            {
-                isDialogOpen && (
-                    <>
-                        <div className="overlay"></div>
-                        <dialog open className="dialog">
-                            <h3 className="dialogHeading">確認您的商店資料</h3>
+            {isDialogOpen && (
+                <>
+                    <div className="overlay"></div>
+                    <dialog open className="dialog">
+                        <h3 className="dialogHeading">確認您的商店資料</h3>
 
-                            <div className="detailsItemContainer">
-                                <div className="detailsItem">
-                                    <strong>{editableDetails.name}</strong>
-                                </div>
-
-                                <div className="detailsItem">
-                                    <PlaceIcon fontSize="small"/>
-                                    {!editMode ? (
-                                        <p>{editableDetails.address}</p>
-                                    ) : (
-                                        <input
-                                            type="text"
-                                            name="address"
-                                            value={editableDetails.address}
-                                            onChange={handleChange}
-                                            className="inputField"
-                                        />
-                                    )}
-                                </div>
-
-                                <div className="detailsItem">
-                                    <CallIcon fontSize="small"/>
-                                    {!editMode ? (
-                                        <p>{editableDetails.phone}</p>
-                                    ) : (
-                                        <input
-                                            type="text"
-                                            name="phone"
-                                            value={editableDetails.phone}
-                                            onChange={handleChange}
-                                            className="inputField"
-                                        />
-                                    )}
-                                </div>
-
-                                {mapUrl && <img src={mapUrl} alt="Store Location" className="mapImg"/>}
+                        <div className="detailsItemContainer">
+                            <div className="detailsItem">
+                                <strong>{editableDetails.storeName}</strong>
                             </div>
 
-                            <div className="btnContainer">
+                            <div className="detailsItem">
+                                <PlaceIcon fontSize="small" />
                                 {!editMode ? (
-                                    <button className="editButton" onClick={handleEdit}>
-                                        <EditIcon fontSize="small"/>
-                                        <p>編輯</p>
-                                    </button>
+                                    <p>{editableDetails.storeAddress}</p>
                                 ) : (
-                                    <button className="saveButton" onClick={handleSave}>
-                                        <SaveOutlinedIcon fontSize="small"/>
-                                        <p>儲存</p>
-                                    </button>
+                                    <input
+                                        type="text"
+                                        name="address"
+                                        value={editableDetails.storeAddress}
+                                        onChange={handleChange}
+                                        className="inputField"
+                                    />
                                 )}
-
-                                <button className="continueButton" onClick={closeDialog}>
-                                    繼續
-                                </button>
                             </div>
-                        </dialog>
-                    </>
-                )}
+
+                            <div className="detailsItem">
+                                <CallIcon fontSize="small" />
+                                {!editMode ? (
+                                    <p>{editableDetails.phoneNumber}</p>
+                                ) : (
+                                    <input
+                                        type="text"
+                                        name="phone"
+                                        value={editableDetails.phoneNumber}
+                                        onChange={handleChange}
+                                        className="inputField"
+                                    />
+                                )}
+                            </div>
+
+                            {mapUrl && <img src={mapUrl} alt="Store Location" className="mapImg" />}
+                        </div>
+
+                        <div className="btnContainer">
+                            {!editMode ? (
+                                <button className="editButton" onClick={handleEdit}>
+                                    <EditIcon fontSize="small" />
+                                    <p>編輯</p>
+                                </button>
+                            ) : (
+                                <button className="saveButton" onClick={handleSave}>
+                                    <SaveOutlinedIcon fontSize="small" />
+                                    <p>儲存</p>
+                                </button>
+                            )}
+
+                            <button className="continueButton" onClick={closeDialog}>
+                                繼續
+                            </button>
+                        </div>
+                    </dialog>
+                </>
+            )}
         </div>
-    );
+    )
 }
 
-export default BusinessSignUp;
+export default BusinessSignUp
