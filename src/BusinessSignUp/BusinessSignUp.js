@@ -7,7 +7,7 @@ import './businessSignUp.scss'
 import {Checkbox} from '@mui/material'
 import * as yup from 'yup'
 import {ErrorMessage, Field, Form, Formik} from 'formik'
-import axios from 'axios'
+import axiosInstance from '../axiosConfig'
 
 function BusinessSignUp() {
     const autocompleteRef = useRef(null)
@@ -108,7 +108,7 @@ function BusinessSignUp() {
         setStoreDetails(updatedStoreDetails)
 
         try {
-            const response = await axios.post(`http://localhost:8000/auth/business-Signup`, updatedStoreDetails)
+            const response = await axiosInstance.post(`/auth/business-Signup`, updatedStoreDetails)
             setEmailSubmitted(true)
         } catch (error) {
             console.error('Error sending data to backend:', error)
