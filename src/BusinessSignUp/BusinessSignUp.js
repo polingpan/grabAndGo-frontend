@@ -40,7 +40,7 @@ function BusinessSignUp() {
         const loadGoogleMaps = async () => {
             try {
                 await loadScript(
-                    `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_API_KEY}&libraries=places&language=zh-TW`
+                    `https://maps.googleapis.com/maps/api/js?key=AIzaSyC52WLMCI0igPQtMP8mUGlhf4_n15tD7ag&libraries=places&language=zh-TW`
                 )
                 initializeAutocomplete()
             } catch (error) {
@@ -69,7 +69,7 @@ function BusinessSignUp() {
                     setStoreDetails(store)
                     const lat = location.lat()
                     const lng = location.lng()
-                    const staticMapUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${lat},${lng}&zoom=15&size=800x400&scale=2&maptype=roadmap&markers=color:red%7C${lat},${lng}&key=${process.env.REACT_APP_GOOGLE_API_KEY}`
+                    const staticMapUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${lat},${lng}&zoom=15&size=800x400&scale=2&maptype=roadmap&markers=color:red%7C${lat},${lng}&key=AIzaSyC52WLMCI0igPQtMP8mUGlhf4_n15tD7ag`
 
                     setMapUrl(staticMapUrl)
                     setEditableDetails(store)

@@ -5,6 +5,7 @@ import BusinessSignUp from './BusinessSignUp/BusinessSignUp'
 import Login from './Login/Login'
 import BusinessEmailVerification from './BusinessSignUp/BusinessEmailVerification'
 import Dashboard from './Dashboard/Dashboard'
+import Sales from './Dashboard/Sales'
 
 function App() {
     return (
@@ -15,6 +16,8 @@ function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/businessEmailVerfication/:token" element={<BusinessEmailVerification />}></Route>
                 <Route path="/dashboard" element={<Dashboard />} />
+
+
             </Routes>
         </div>
     )
