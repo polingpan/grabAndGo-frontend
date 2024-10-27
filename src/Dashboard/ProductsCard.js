@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 import {
     Box,
     Button,
@@ -7,26 +7,35 @@ import {
     DialogContent,
     DialogTitle,
     Typography,
-    TextField, Input
+    TextField,
+    Input
 } from '@mui/material'
 import {alpha, useTheme} from '@mui/material/styles'
 import EditIcon from '@mui/icons-material/Edit'
 import * as React from 'react'
 import InputAdornment from '@mui/material/InputAdornment'
-
-const initialProductsData = [
-    {name: '烘焙食品', price: '100'},
-    {name: '驚喜盲盒', price: '150'},
-    {name: '飲品', price: '100'}
-]
+import axiosInstance from '../axiosConfig'
 
 function ProductsCard() {
     const theme = useTheme()
-    const [products, setProducts] = useState(initialProductsData)
+    const [products, setProducts] = useState([])
     const [openEditProducts, setOpenEditProducts] = useState(false)
     const [currentProduct, setCurrentProduct] = useState(null)
     const [editedName, setEditedName] = useState('')
     const [editedPrice, setEditedPrice] = useState('')
+
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const response = await axiosInstance.get('/products')
+                setProducts(response.data.products)
+            } catch (err) {
+                console.error('Error fetching products:', err)
+            }
+        }
+
+        fetchProducts()
+    }, [products])
 
     const handleClickOpen = (product, index) => {
         setCurrentProduct(index)
@@ -93,21 +102,15 @@ function ProductsCard() {
                 </Box>
             ))}
 
-            <Dialog
-                open={openEditProducts}
-                onClose={handleClose}
-                aria-labelledby="responsive-dialog-title"
-            >
-                <DialogTitle id="responsive-dialog-title">
-                    編輯商品
-                </DialogTitle>
+            <Dialog open={openEditProducts} onClose={handleClose} aria-labelledby="responsive-dialog-title">
+                <DialogTitle id="responsive-dialog-title">編輯商品</DialogTitle>
                 <DialogContent>
                     <TextField
                         margin="dense"
                         label="商品名稱"
                         fullWidth
                         value={editedName}
-                        onChange={(e) => setEditedName(e.target.value)}
+                        onChange={e => setEditedName(e.target.value)}
                     />
                     <TextField
                         margin="dense"
@@ -119,13 +122,11 @@ function ProductsCard() {
                                 startAdornment: <InputAdornment position="start">$</InputAdornment>
                             }
                         }}
-                        onChange={(e) => setEditedPrice(e.target.value)}
+                        onChange={e => setEditedPrice(e.target.value)}
                     />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose}>
-                        返回
-                    </Button>
+                    <Button onClick={handleClose}>返回</Button>
                     <Button onClick={handleSave} autoFocus>
                         儲存
                     </Button>
