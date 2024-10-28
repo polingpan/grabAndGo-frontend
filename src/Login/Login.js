@@ -32,9 +32,7 @@ function Login() {
                                 if (response.status === 200) {
                                     localStorage.setItem('token', response.data.token)
                                     axiosInstance.defaults.headers['Authorization'] = `Bearer ${response.data.token}`
-                                    dispatch(setBusinessUserInfo(response.data.token))
 
-                                    console.log('Success', response.data)
                                     navigate('/dashboard')
                                 } else {
                                     console.error('Error:', response.statusText)

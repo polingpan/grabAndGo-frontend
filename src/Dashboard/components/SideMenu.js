@@ -30,7 +30,6 @@ export default function SideMenu({onItemClick, selectedItem}) {
     const isDarkMode = theme.palette.mode === 'dark'
 
     const storeInfo = useSelector(state => state.businessUser.storeInfo)
-    console.log(storeInfo)
     return (
         <Drawer
             variant="permanent"

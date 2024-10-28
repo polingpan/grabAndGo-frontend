@@ -31,7 +31,6 @@ const secondaryListItems = [
 export default function MenuContent({onItemClick, selectedItem}) {
     const theme = useTheme()
     const isDarkMode = theme.palette.mode === 'dark'
-    console.log(selectedItem)
     return (
         <Stack sx={{flexGrow: 1, p: 1, justifyContent: 'space-between'}}>
             <List dense>
@@ -56,26 +55,28 @@ export default function MenuContent({onItemClick, selectedItem}) {
                             />
                         </ListItemButton>
                     </ListItem>
-
-
                 ))}
             </List>
 
             <List dense>
                 {secondaryListItems.map((item, index) => (
                     <ListItem key={index} disablePadding sx={{display: 'block'}}>
-                        <ListItemButton onClick={() => onItemClick(item.text)} sx={{
-                            backgroundColor: selectedItem === item.text ? '#c8c5b2' : 'transparent',
-                            '&:hover': {backgroundColor: isDarkMode ? 'hsla(220, 20%, 88%, 0.3)' : '#c8c5b2'}
-                        }}>
-                            <ListItemIcon>
-                                {item.icon}
-                            </ListItemIcon>
-                            <ListItemText primary={item.text} sx={{
-                                '& .MuiTypography-root': {
-                                    fontSize: '1rem'
-                                }
-                            }} />
+                        <ListItemButton
+                            onClick={() => onItemClick(item.text)}
+                            sx={{
+                                backgroundColor: selectedItem === item.text ? '#c8c5b2' : 'transparent',
+                                '&:hover': {backgroundColor: isDarkMode ? 'hsla(220, 20%, 88%, 0.3)' : '#c8c5b2'}
+                            }}
+                        >
+                            <ListItemIcon>{item.icon}</ListItemIcon>
+                            <ListItemText
+                                primary={item.text}
+                                sx={{
+                                    '& .MuiTypography-root': {
+                                        fontSize: '1rem'
+                                    }
+                                }}
+                            />
                         </ListItemButton>
                     </ListItem>
                 ))}
