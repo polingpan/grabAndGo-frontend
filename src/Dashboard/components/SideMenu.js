@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {styled} from '@mui/material/styles'
+import {styled, useTheme} from '@mui/material/styles'
 import Avatar from '@mui/material/Avatar'
 import MuiDrawer, {drawerClasses} from '@mui/material/Drawer'
 import Box from '@mui/material/Box'
@@ -26,14 +26,18 @@ const Drawer = styled(MuiDrawer)({
 })
 
 export default function SideMenu({onItemClick, selectedItem}) {
+    const theme = useTheme()
+    const isDarkMode = theme.palette.mode === 'dark'
+
     const storeInfo = useSelector(state => state.businessUser.storeInfo)
+    console.log(storeInfo)
     return (
         <Drawer
             variant="permanent"
             sx={{
                 display: {xs: 'none', md: 'block'},
                 [`& .${drawerClasses.paper}`]: {
-                    backgroundColor: 'background.paper'
+                    backgroundColor: isDarkMode ? 'black' : '#eeecd9'
                 }
             }}
         >
@@ -60,12 +64,13 @@ export default function SideMenu({onItemClick, selectedItem}) {
                     borderColor: 'divider'
                 }}
             >
-                <Avatar
-                    sizes="small"
-                    alt="Riley Carter"
-                    src="/static/images/avatar/7.jpg"
-                    sx={{width: 36, height: 36}}
-                />
+                {/*<Avatar*/}
+                {/*    sizes="small"*/}
+                {/*    alt={storeInfo.storeName}*/}
+                {/*    sx={{width: 36, height: 36}}*/}
+                {/*>*/}
+                {/*    {storeInfo.storeName.charAt(0).toUpperCase()}*/}
+                {/*</Avatar>*/}
                 <Box sx={{mr: 'auto', display: 'flex', flexDirection: 'column', alignItems: 'flex-start'}}>
                     <Typography variant="body2" sx={{fontWeight: 500, lineHeight: '16px'}}>
                         {storeInfo.storeName}

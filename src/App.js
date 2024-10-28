@@ -8,6 +8,7 @@ import Dashboard from './Dashboard/Dashboard'
 import Sales from './Dashboard/Sales'
 
 function App() {
+    
     return (
         <div className="App">
             <Routes>

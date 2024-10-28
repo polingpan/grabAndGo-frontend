@@ -13,7 +13,6 @@ import {
 } from '@mui/material'
 import {alpha, useTheme} from '@mui/material/styles'
 import EditIcon from '@mui/icons-material/Edit'
-import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined'
 import * as React from 'react'
 import InputAdornment from '@mui/material/InputAdornment'
 import axiosInstance from '../axiosConfig'
@@ -28,6 +27,7 @@ function ProductsCard({min = 1, max = 100}) {
 
     const [products, setProducts] = useState([])
     const [openEditProducts, setOpenEditProducts] = useState(false)
+    const [openDeleteConfirm, setOpenDeleteConfirm] = useState(false)
     const [currentProduct, setCurrentProduct] = useState(null)
     const [editedName, setEditedName] = useState('')
     const [editedPrice, setEditedPrice] = useState('')
@@ -116,11 +116,21 @@ function ProductsCard({min = 1, max = 100}) {
             const response = await axiosInstance.delete(`/products/${productId}`)
 
             console.log(response.data.message)
+            setOpenDeleteConfirm(false)
             return response.data
+
         } catch (error) {
             console.error('Failed to delete product:', error.response?.data || error.message)
             throw error
         }
+    }
+
+    const handleDeleteOpen = () => {
+        setOpenDeleteConfirm(true)
+    }
+
+    const handleDeleteClose = () => {
+        setOpenDeleteConfirm(false)
     }
 
     return (
@@ -263,13 +273,13 @@ function ProductsCard({min = 1, max = 100}) {
                 <DialogActions sx={{display: 'flex', justifyContent: 'space-between'}}>
                     <Button
                         sx={{backgroundColor: isDarkMode ? theme.palette.error.light : '#FAEBEA', color: '#D02435'}}
-                        onClick={() => deleteProduct(currentProduct.productId)}
+                        onClick={handleDeleteOpen}
                     >
                         刪除商品
                     </Button>
                     <Box>
                         <Button onClick={handleClose} sx={{
-                            backgroundColor: isDarkMode ? theme.palette.info.light : '#E0E0E0',
+                            backgroundColor: isDarkMode ? 'hsl(220, 20%, 42%)' : '#E0E0E0',
                             color: '#424242'
                         }}>返回</Button>
                         <Button onClick={handleSave}
@@ -282,6 +292,22 @@ function ProductsCard({min = 1, max = 100}) {
                         </Button>
                     </Box>
 
+                </DialogActions>
+            </Dialog>
+            <Dialog open={openDeleteConfirm} onClose={handleDeleteClose} aria-labelledby="delete-confirm-dialog">
+                <DialogTitle id="delete-confirm-dialog">確認刪除商品</DialogTitle>
+                <DialogContent>
+                    <Typography>您確定要刪除此商品嗎？</Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleDeleteClose}
+                            sx={{backgroundColor: isDarkMode ? 'hsl(220, 20%, 42%)' : '#E0E0E0'}}>取消</Button>
+                    <Button
+                        onClick={() => deleteProduct(currentProduct.productId)}
+                        sx={{backgroundColor: isDarkMode ? theme.palette.error.light : '#FAEBEA', color: '#D02435'}}
+                    >
+                        確認刪除
+                    </Button>
                 </DialogActions>
             </Dialog>
         </Box>

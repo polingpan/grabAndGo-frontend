@@ -14,6 +14,7 @@ import InfoRoundedIcon from '@mui/icons-material/InfoRounded'
 import HelpRoundedIcon from '@mui/icons-material/HelpRounded'
 import ReceiptIcon from '@mui/icons-material/Receipt'
 import {useNavigate} from 'react-router-dom'
+import {useTheme} from '@mui/material/styles'
 
 const mainListItems = [
     {text: '主頁', icon: <HomeRoundedIcon />},
@@ -28,7 +29,9 @@ const secondaryListItems = [
 ]
 
 export default function MenuContent({onItemClick, selectedItem}) {
-
+    const theme = useTheme()
+    const isDarkMode = theme.palette.mode === 'dark'
+    console.log(selectedItem)
     return (
         <Stack sx={{flexGrow: 1, p: 1, justifyContent: 'space-between'}}>
             <List dense>
@@ -38,8 +41,8 @@ export default function MenuContent({onItemClick, selectedItem}) {
                             onClick={() => onItemClick(item.text)}
                             selected={selectedItem === item.text}
                             sx={{
-                                backgroundColor: selectedItem === item.text ? 'hsla(220, 20%, 88%, 0.3)' : 'transparent',
-                                '&:hover': {backgroundColor: 'lightgray'}
+                                backgroundColor: selectedItem === item.text ? '#c8c5b2' : 'transparent',
+                                '&:hover': {backgroundColor: isDarkMode ? 'hsla(220, 20%, 88%, 0.3)' : '#c8c5b2'}
                             }}
                         >
                             <ListItemIcon>{item.icon}</ListItemIcon>
@@ -62,8 +65,8 @@ export default function MenuContent({onItemClick, selectedItem}) {
                 {secondaryListItems.map((item, index) => (
                     <ListItem key={index} disablePadding sx={{display: 'block'}}>
                         <ListItemButton onClick={() => onItemClick(item.text)} sx={{
-                            backgroundColor: selectedItem === item.text ? 'hsla(220, 20%, 88%, 0.3)' : 'transparent',
-                            '&:hover': {backgroundColor: 'lightgray'}
+                            backgroundColor: selectedItem === item.text ? '#c8c5b2' : 'transparent',
+                            '&:hover': {backgroundColor: isDarkMode ? 'hsla(220, 20%, 88%, 0.3)' : '#c8c5b2'}
                         }}>
                             <ListItemIcon>
                                 {item.icon}

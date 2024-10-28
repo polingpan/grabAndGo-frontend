@@ -15,7 +15,9 @@ import {
     datePickersCustomizations,
     treeViewCustomizations
 } from './theme/customizations'
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
+import {setBusinessUserInfo} from '../actions/businessUser/businessUserAction'
+import {useDispatch} from 'react-redux'
 
 const xThemeComponents = {
     ...chartsCustomizations,
@@ -25,12 +27,17 @@ const xThemeComponents = {
 }
 
 export default function Dashboard(props) {
-    const [selectedItem, setSelectedItem] = useState('Home')
+    const dispatch = useDispatch()
+    const [selectedItem, setSelectedItem] = useState('主頁')
 
     const handleItemClick = (item) => {
         setSelectedItem(item)
-      
     }
+    useEffect(() => {
+        const token = localStorage.getItem('token')
+        dispatch(setBusinessUserInfo(token))
+    }, [])
+    
     return (
         <AppTheme {...props} themeComponents={xThemeComponents}>
             <CssBaseline enableColorScheme />
