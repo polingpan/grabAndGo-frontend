@@ -3,6 +3,8 @@ import * as yup from 'yup'
 import {Formik, Form, Field, ErrorMessage} from 'formik'
 import {useNavigate} from 'react-router-dom'
 import axiosInstance from '../axiosConfig'
+import {useDispatch} from 'react-redux'
+import {setBusinessUserInfo} from '../actions/businessUser/businessUserAction'
 
 function Login() {
     const schema = yup.object().shape({
@@ -11,6 +13,7 @@ function Login() {
     })
 
     const navigate = useNavigate()
+    const dispatch = useDispatch()
 
     return (
         <div className="pageWrapper">
@@ -29,6 +32,7 @@ function Login() {
                                 if (response.status === 200) {
                                     localStorage.setItem('token', response.data.token)
                                     axiosInstance.defaults.headers['Authorization'] = `Bearer ${response.data.token}`
+                                    dispatch(setBusinessUserInfo(response.data.token))
 
                                     console.log('Success', response.data)
                                     navigate('/dashboard')

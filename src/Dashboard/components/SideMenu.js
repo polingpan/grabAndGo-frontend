@@ -10,6 +10,7 @@ import SelectContent from './SelectContent'
 import MenuContent from './MenuContent'
 import CardAlert from './CardAlert'
 import OptionsMenu from './OptionsMenu'
+import {useSelector} from 'react-redux'
 
 const drawerWidth = 240
 
@@ -25,6 +26,7 @@ const Drawer = styled(MuiDrawer)({
 })
 
 export default function SideMenu({onItemClick, selectedItem}) {
+    const storeInfo = useSelector(state => state.businessUser.storeInfo)
     return (
         <Drawer
             variant="permanent"
@@ -66,10 +68,10 @@ export default function SideMenu({onItemClick, selectedItem}) {
                 />
                 <Box sx={{mr: 'auto', display: 'flex', flexDirection: 'column', alignItems: 'flex-start'}}>
                     <Typography variant="body2" sx={{fontWeight: 500, lineHeight: '16px'}}>
-                        Starbucks
+                        {storeInfo.storeName}
                     </Typography>
                     <Typography variant="caption" sx={{color: 'text.secondary'}}>
-                        starbucks@gmail.com
+                        {storeInfo.email}
                     </Typography>
                 </Box>
                 <OptionsMenu />
