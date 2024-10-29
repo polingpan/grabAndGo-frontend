@@ -24,11 +24,15 @@ export default function Header({selectedItem}) {
         >
             <NavbarBreadcrumbs selectedItem={selectedItem} />
             <Stack direction="row" sx={{gap: 1}}>
-                <Search />
-                <CustomDatePicker />
-                <MenuButton showBadge aria-label="Open notifications">
-                    <NotificationsRoundedIcon />
-                </MenuButton>
+                {selectedItem === '銷售紀錄' && (
+                    <>
+                        <Search />
+                        <CustomDatePicker />
+                    </>
+                )}
+                {/*<MenuButton showBadge aria-label="Open notifications">*/}
+                {/*    <NotificationsRoundedIcon />*/}
+                {/*</MenuButton>*/}
                 <ColorModeIconDropdown />
             </Stack>
         </Stack>

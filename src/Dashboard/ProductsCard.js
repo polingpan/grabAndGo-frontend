@@ -15,7 +15,7 @@ import {
 import {alpha, useTheme} from '@mui/material/styles'
 import EditIcon from '@mui/icons-material/Edit'
 import * as React from 'react'
-import ProductDialog from './ProductDialog'
+import ProductDialog from './ProductDialogTemp'
 import {useDispatch} from 'react-redux'
 import {deleteProduct, editProduct} from '../actions/product/productAction'
 

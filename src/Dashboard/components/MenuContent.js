@@ -17,15 +17,15 @@ import {useNavigate} from 'react-router-dom'
 import {useTheme} from '@mui/material/styles'
 
 const mainListItems = [
-    {text: '主頁', icon: <HomeRoundedIcon />},
-    {text: '業績分析', icon: <AnalyticsRoundedIcon />},
-    {text: '銷售紀錄', icon: <ReceiptIcon />}
+    {text: '主頁', icon: <HomeRoundedIcon />, path: 'home'},
+    {text: '業績分析', icon: <AnalyticsRoundedIcon />, path: 'performance'},
+    {text: '銷售紀錄', icon: <ReceiptIcon />, path: 'sales'}
 ]
 
 const secondaryListItems = [
-    {text: '設定', icon: <SettingsRoundedIcon />},
-    {text: '關於', icon: <InfoRoundedIcon />},
-    {text: '反饋', icon: <HelpRoundedIcon />}
+    {text: '設定', icon: <SettingsRoundedIcon />, path: 'settings'},
+    {text: '關於', icon: <InfoRoundedIcon />, path: 'about'},
+    {text: '反饋', icon: <HelpRoundedIcon />, path: 'feedback'}
 ]
 
 export default function MenuContent({onItemClick, selectedItem}) {

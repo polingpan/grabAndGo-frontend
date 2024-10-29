@@ -1,7 +1,7 @@
 import {Box, Button, Typography} from '@mui/material'
 import {alpha, useTheme} from '@mui/material/styles'
 import {useState} from 'react'
-import ProductDialog from './ProductDialog'
+import ProductDialog from './ProductDialogTemp'
 import {useDispatch} from 'react-redux'
 import {addProduct} from '../actions/product/productAction'
 
