@@ -121,14 +121,18 @@ function ProductsCard({products}) {
         <Box
             sx={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
-                gap: 2
+                gridTemplateColumns: 'repeat(auto-fill, 250px)',
+                gap: 2,
+                justifyContent: 'center'
             }}
         >
             {products.map((item, index) => (
                 <Box
                     key={index}
                     sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
                         position: 'relative',
                         border: `1px solid ${theme.palette.divider}`,
                         padding: 2,
@@ -137,6 +141,8 @@ function ProductsCard({products}) {
                             ? `rgba(${theme.vars.palette.background.defaultChannel} / 1)`
                             : alpha(theme.palette.background.default, 1),
                         color: theme.palette.text.primary,
+                        minHeight: '200px',
+                        alignItems: 'center',
                         boxShadow: `0 2px 8px ${alpha(theme.palette.common.black, 0.1)}`,
                         '&:hover': {
                             boxShadow: `0 4px 12px ${alpha(theme.palette.common.black, 0.2)}`
@@ -154,12 +160,27 @@ function ProductsCard({products}) {
                         fontSize="small"
                         onClick={() => handleClickOpen(item, index)}
                     />
-                    <Typography variant="subtitle1" sx={{fontWeight: 500}}>
-                        {item.name}
-                    </Typography>
-                    <Typography variant="body2" sx={{mt: 0.5, color: theme.palette.text.secondary}}>
-                        ${item.price}
-                    </Typography>
+                    <Box sx={{display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
+                        <Typography variant="subtitle1" sx={{fontWeight: 500}}>
+                            {item.name}
+                        </Typography>
+                        <Typography variant="body2" sx={{mt: 0.5, color: theme.palette.text.secondary}}>
+                            ${item.price}
+                        </Typography>
+                    </Box>
+                    <Box
+                        sx={{
+                            position: 'absolute',
+                            bottom: 8,
+                            right: 8,
+                            display: 'flex',
+                            flexDirection: 'row',
+                            textAlign: 'right'
+                        }}
+                    >
+                        <Typography sx={{marginRight: '0.5rem'}}>In Stock:</Typography>
+                        <Typography>{item.quantity}</Typography>
+                    </Box>
                 </Box>
             ))}
             <ProductDialog
