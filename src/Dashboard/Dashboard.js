@@ -18,6 +18,7 @@ import {
 import {useEffect, useState} from 'react'
 import {setBusinessUserInfo} from '../actions/businessUser/businessUserAction'
 import {useDispatch} from 'react-redux'
+import {Outlet} from 'react-router-dom'
 
 const xThemeComponents = {
     ...chartsCustomizations,
@@ -30,14 +31,14 @@ export default function Dashboard(props) {
     const dispatch = useDispatch()
     const [selectedItem, setSelectedItem] = useState('主頁')
 
-    const handleItemClick = (item) => {
+    const handleItemClick = item => {
         setSelectedItem(item)
     }
     useEffect(() => {
         const token = localStorage.getItem('token')
         dispatch(setBusinessUserInfo(token))
     }, [])
-    
+
     return (
         <AppTheme {...props} themeComponents={xThemeComponents}>
             <CssBaseline enableColorScheme />
@@ -47,7 +48,7 @@ export default function Dashboard(props) {
 
                 <Box
                     component="main"
-                    sx={(theme) => ({
+                    sx={theme => ({
                         flexGrow: 1,
                         backgroundColor: theme.vars
                             ? `rgba(${theme.vars.palette.background.defaultChannel} / 1)`

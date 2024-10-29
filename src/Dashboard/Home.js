@@ -5,12 +5,6 @@ import {alpha, useTheme} from '@mui/material/styles'
 import {useState} from 'react'
 import ProductsCard from './ProductsCard'
 
-const productsData = [
-    {name: '烘焙食品', price: '$100'},
-    {name: '驚喜盲盒', price: '$150'},
-    {name: '飲品', price: '$100'}
-]
-
 function Home() {
     const [openAddProduct, setOpenAddProduct] = useState(false)
     const theme = useTheme()
