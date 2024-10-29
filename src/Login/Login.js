@@ -1,17 +1,19 @@
 import './login.scss'
 import * as yup from 'yup'
 import {Formik, Form, Field, ErrorMessage} from 'formik'
-import axios from 'axios'
 import {useNavigate} from 'react-router-dom'
+import axiosInstance from '../axiosConfig'
+import {useDispatch} from 'react-redux'
+import {setBusinessUserInfo} from '../actions/businessUser/businessUserAction'
 
 function Login() {
-
     const schema = yup.object().shape({
         email: yup.string().required('此為必填欄位').email('請輸入有效電子郵件'),
         password: yup.string().trim().min(6, '密碼必須至少包含 6 個字符').max(20, '密碼不能超過 20 個字符')
     })
 
     const navigate = useNavigate()
+    const dispatch = useDispatch()
 
     return (
         <div className="pageWrapper">
@@ -25,9 +27,13 @@ function Login() {
                         validateOnMount={true}
                         onSubmit={async (values, {setSubmitting}) => {
                             try {
-                                const response = await axios.post('http://localhost:8000/auth/business-login', values)
+                                const response = await axiosInstance.post('/auth/business-login', values)
 
                                 if (response.status === 200) {
+                                    localStorage.setItem('token', response.data.token)
+                                    axiosInstance.defaults.headers['Authorization'] = `Bearer ${response.data.token}`
+                                    dispatch(setBusinessUserInfo(response.data.token))
+
                                     console.log('Success', response.data)
                                     navigate('/dashboard')
                                 } else {
