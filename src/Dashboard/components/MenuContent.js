@@ -31,7 +31,6 @@ const secondaryListItems = [
 export default function MenuContent({onItemClick, selectedItem}) {
     const theme = useTheme()
     const isDarkMode = theme.palette.mode === 'dark'
-
     return (
         <Stack sx={{flexGrow: 1, p: 1, justifyContent: 'space-between'}}>
             <List dense>

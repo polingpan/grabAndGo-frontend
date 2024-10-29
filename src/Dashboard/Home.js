@@ -1,59 +1,27 @@
 import * as React from 'react'
-import {Box, Button, Typography} from '@mui/material'
-import EditIcon from '@mui/icons-material/Edit'
-import {alpha, useTheme} from '@mui/material/styles'
-import {useState} from 'react'
+import {Box, Typography} from '@mui/material'
+import {useTheme} from '@mui/material/styles'
+import {useEffect} from 'react'
 import ProductsCard from './ProductsCard'
+import AddProduct from './AddProduct'
+import {useDispatch, useSelector} from 'react-redux'
+import {fetchProducts} from '../actions/product/productAction'
 
 function Home() {
-    const [openAddProduct, setOpenAddProduct] = useState(false)
     const theme = useTheme()
+    const dispatch = useDispatch()
+    const products = useSelector(state => state.product.products)
 
-    const handleAddProductOpen = () => {
-        setOpenAddProduct(true)
-    }
+    useEffect(() => {
+        dispatch(fetchProducts())
+    }, [dispatch])
 
-    const hanldeAddProductClose = () => {
-        setOpenAddProduct(false)
-    }
     return (
         <Box sx={{display: 'flex', flexDirection: 'column', gap: 2, padding: 2}}>
             <Typography variant="h5" sx={{mb: 2, color: theme.palette.text.primary}}>
                 您的商品
             </Typography>
-
-            <ProductsCard />
-            <Box
-                sx={{
-                    border: `1px solid ${theme.palette.divider}`,
-                    borderRadius: '12px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    padding: 2,
-                    mt: 3,
-                    backgroundColor: theme.palette.background.default,
-                    color: theme.palette.text.primary,
-                    boxShadow: `0 1px 4px ${alpha(theme.palette.common.black, 0.1)}`
-                }}
-            >
-                <Typography variant="body1" sx={{mb: 1}}>
-                    您目前沒有可販售的商品
-                </Typography>
-                <Button
-                    variant="outlined"
-                    sx={{
-                        borderColor: theme.palette.divider,
-                        color: theme.palette.primary.main
-                        // '&:hover': {
-                        //     backgroundColor: alpha(theme.palette.primary.main, 0.1)
-                        // }
-                    }}
-                    onClick={handleAddProductOpen}
-                >
-                    新增商品
-                </Button>
-            </Box>
+            {products.length > 0 ? <ProductsCard products={products} /> : <AddProduct />}
         </Box>
     )
 }
