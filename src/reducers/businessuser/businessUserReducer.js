@@ -1,7 +1,7 @@
 import {businessUserActionType} from '../../actions/businessUser/businessUserAction'
 
 const initialState = {
-    storeInfo: {storeName: null, email: null}
+    storeInfo: {storeName: null, email: null, storeAddress: null, phoneNumber: null}
 }
 
 export const businessUserReducer = (state = initialState, action) => {
@@ -12,7 +12,9 @@ export const businessUserReducer = (state = initialState, action) => {
                 storeInfo: {
                     ...state.storeInfo,
                     email: action.payload.email,
-                    storeName: action.payload.storeName
+                    storeName: action.payload.storeName,
+                    storeAddress: action.payload.storeAddress,
+                    phoneNumber: action.payload.phoneNumber
                 }
             }
         case businessUserActionType.CLEAR_BUSINESS_USER_INFO:

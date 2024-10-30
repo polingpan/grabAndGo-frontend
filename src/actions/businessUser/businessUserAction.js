@@ -12,7 +12,9 @@ export const setBusinessUserInfo = token => dispatch => {
         type: businessUserActionType.SET_BUSINESS_USER_INFO,
         payload: {
             email: decoded.email,
-            storeName: decoded.name
+            storeName: decoded.name,
+            storeAddress: decoded.storeAddress,
+            phoneNumber: decoded.phoneNumber
         }
     })
 }
