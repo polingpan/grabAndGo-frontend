@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React, {useState} from 'react'
 import {styled} from '@mui/material/styles'
 import Divider, {dividerClasses} from '@mui/material/Divider'
 import Menu from '@mui/material/Menu'
@@ -15,13 +15,16 @@ import {useDispatch} from 'react-redux'
 import {BusinessRounded} from '@mui/icons-material'
 import {businessLogout} from '../../actions/businessUser/businessUserAction'
 import axiosInstance from '../../axiosConfig'
+import MyAccount from './MyAccount'
 
 const MenuItem = styled(MuiMenuItem)({
     margin: '2px 0'
 })
 
 export default function OptionsMenu() {
-    const [anchorEl, setAnchorEl] = React.useState(null)
+    const [anchorEl, setAnchorEl] = useState(null)
+    const [dialogOpen, setDialogOpen] = useState(false)
+
     const open = Boolean(anchorEl)
     const navigate = useNavigate()
     const dispatch = useDispatch()
@@ -43,6 +46,15 @@ export default function OptionsMenu() {
         navigate('/login')
 
         handleClose()
+    }
+
+    const handleDialogOpen = () => {
+        setDialogOpen(true)
+        handleClose()
+    }
+
+    const handleDialogClose = () => {
+        setDialogOpen(false)
     }
     return (
         <React.Fragment>
@@ -69,8 +81,7 @@ export default function OptionsMenu() {
                     }
                 }}
             >
-                <MenuItem onClick={handleClose}>Profile</MenuItem>
-                <MenuItem onClick={handleClose}>My account</MenuItem>
+                <MenuItem onClick={handleDialogOpen}>My account</MenuItem>
                 <Divider />
                 <MenuItem onClick={handleClose}>Settings</MenuItem>
                 <Divider />
@@ -89,6 +100,7 @@ export default function OptionsMenu() {
                     </ListItemIcon>
                 </MenuItem>
             </Menu>
+            <MyAccount open={dialogOpen} onClose={handleDialogClose} />
         </React.Fragment>
     )
 }
