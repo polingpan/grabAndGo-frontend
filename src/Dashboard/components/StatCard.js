@@ -10,21 +10,6 @@ import Typography from '@mui/material/Typography'
 import {SparkLineChart} from '@mui/x-charts/SparkLineChart'
 import {areaElementClasses} from '@mui/x-charts/LineChart'
 
-function getDaysInMonth(month, year) {
-    const date = new Date(year, month, 0)
-    const monthName = date.toLocaleDateString('en-US', {
-        month: 'short'
-    })
-    const daysInMonth = date.getDate()
-    const days = []
-    let i = 1
-    while (days.length < daysInMonth) {
-        days.push(`${monthName} ${i}`)
-        i += 1
-    }
-    return days
-}
-
 function AreaGradient({color, id}) {
     return (
         <defs>
@@ -41,34 +26,36 @@ AreaGradient.propTypes = {
     id: PropTypes.string.isRequired
 }
 
-function StatCard({title, value, interval, trend, data}) {
+function StatCard({title, interval, data}) {
     const theme = useTheme()
-    const daysInWeek = getDaysInMonth(4, 2024)
+
+    // Calculate the total value and trend
+    const totalValue = data.reduce((sum, item) => sum + item.value, 0)
+
+    const {trend, trendLabel} = React.useMemo(() => {
+        if (data.length < 2) return {trend: 'neutral', trendLabel: '0%'}
+
+        const firstValue = data[0].value
+        const lastValue = data[data.length - 1].value
+        const percentageChange = ((lastValue - firstValue) / firstValue) * 100
+
+        if (percentageChange > 5) {
+            return {trend: 'up', trendLabel: `+${percentageChange.toFixed(1)}%`}
+        } else if (percentageChange < -5) {
+            return {trend: 'down', trendLabel: `${percentageChange.toFixed(1)}%`}
+        } else {
+            return {trend: 'neutral', trendLabel: '0%'}
+        }
+    }, [data])
 
     const trendColors = {
-        up:
-            theme.palette.mode === 'light'
-                ? theme.palette.success.main
-                : theme.palette.success.dark,
-        down:
-            theme.palette.mode === 'light'
-                ? theme.palette.error.main
-                : theme.palette.error.dark,
-        neutral:
-            theme.palette.mode === 'light'
-                ? theme.palette.grey[400]
-                : theme.palette.grey[700]
+        up: theme.palette.success.main,
+        down: theme.palette.error.main,
+        neutral: theme.palette.grey[400]
     }
 
-    const labelColors = {
-        up: 'success',
-        down: 'error',
-        neutral: 'default'
-    }
-
-    const color = labelColors[trend]
+    const color = trend === 'up' ? 'success' : trend === 'down' ? 'error' : 'default'
     const chartColor = trendColors[trend]
-    const trendValues = {up: '+25%', down: '-25%', neutral: '+5%'}
 
     return (
         <Card variant="outlined" sx={{height: '100%', flexGrow: 1}}>
@@ -76,19 +63,13 @@ function StatCard({title, value, interval, trend, data}) {
                 <Typography component="h2" variant="subtitle2" gutterBottom>
                     {title}
                 </Typography>
-                <Stack
-                    direction="column"
-                    sx={{justifyContent: 'space-between', flexGrow: '1', gap: 1}}
-                >
+                <Stack direction="column" sx={{justifyContent: 'space-between', flexGrow: 1, gap: 1}}>
                     <Stack sx={{justifyContent: 'space-between'}}>
-                        <Stack
-                            direction="row"
-                            sx={{justifyContent: 'space-between', alignItems: 'center'}}
-                        >
+                        <Stack direction="row" sx={{justifyContent: 'space-between', alignItems: 'center'}}>
                             <Typography variant="h4" component="p">
-                                {value}
+                                {totalValue.toLocaleString()}
                             </Typography>
-                            <Chip size="small" color={color} label={trendValues[trend]} />
+                            <Chip size="small" color={color} label={trendLabel} />
                         </Stack>
                         <Typography variant="caption" sx={{color: 'text.secondary'}}>
                             {interval}
@@ -97,21 +78,21 @@ function StatCard({title, value, interval, trend, data}) {
                     <Box sx={{width: '100%', height: 50}}>
                         <SparkLineChart
                             colors={[chartColor]}
-                            data={data}
+                            data={data.map(item => item.value)}
                             area
                             showHighlight
                             showTooltip
                             xAxis={{
                                 scaleType: 'band',
-                                data: daysInWeek // Use the correct property 'data' for xAxis
+                                data: data.map(item => item.date)
                             }}
                             sx={{
                                 [`& .${areaElementClasses.root}`]: {
-                                    fill: `url(#area-gradient-${value})`
+                                    fill: `url(#area-gradient-${totalValue})`
                                 }
                             }}
                         >
-                            <AreaGradient color={chartColor} id={`area-gradient-${value}`} />
+                            <AreaGradient color={chartColor} id={`area-gradient-${totalValue}`} />
                         </SparkLineChart>
                     </Box>
                 </Stack>
@@ -121,11 +102,14 @@ function StatCard({title, value, interval, trend, data}) {
 }
 
 StatCard.propTypes = {
-    data: PropTypes.arrayOf(PropTypes.number).isRequired,
-    interval: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
-    trend: PropTypes.oneOf(['down', 'neutral', 'up']).isRequired,
-    value: PropTypes.string.isRequired
+    interval: PropTypes.string.isRequired,
+    data: PropTypes.arrayOf(
+        PropTypes.shape({
+            date: PropTypes.string.isRequired,
+            value: PropTypes.number.isRequired
+        })
+    ).isRequired
 }
 
 export default StatCard

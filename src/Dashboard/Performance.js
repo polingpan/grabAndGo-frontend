@@ -1,68 +1,112 @@
-import {Box} from '@mui/material'
+import React, {useEffect, useMemo, useState} from 'react'
+import {Box, Select, MenuItem, FormControl, Typography} from '@mui/material'
 import Grid from '@mui/material/Grid2'
 import StatCard from './components/StatCard'
-import SessionsChart from './components/SessionsChart'
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday'
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
+import {useDispatch, useSelector} from 'react-redux'
 import PageViewsBarChart from './components/PageViewsBarChart'
-
-const data = [
-    {
-        title: 'Users',
-        value: '14k',
-        interval: 'Last 30 days',
-        trend: 'up',
-        data: [
-            200, 24, 220, 260, 240, 380, 100, 240, 280, 240, 300, 340, 320, 360, 340, 380,
-            360, 400, 380, 420, 400, 640, 340, 460, 440, 480, 460, 600, 880, 920
-        ]
-    },
-    {
-        title: 'Conversions',
-        value: '325',
-        interval: 'Last 30 days',
-        trend: 'down',
-        data: [
-            1640, 1250, 970, 1130, 1050, 900, 720, 1080, 900, 450, 920, 820, 840, 600, 820,
-            780, 800, 760, 380, 740, 660, 620, 840, 500, 520, 480, 400, 360, 300, 220
-        ]
-    },
-    {
-        title: 'Event count',
-        value: '200k',
-        interval: 'Last 30 days',
-        trend: 'neutral',
-        data: [
-            500, 400, 510, 530, 520, 600, 530, 520, 510, 730, 520, 510, 530, 620, 510, 530,
-            520, 410, 530, 520, 610, 530, 520, 610, 530, 420, 510, 430, 520, 510
-        ]
-    }
-]
+import SessionsChart from './components/SessionsChart'
+import {fetchDashboardData, fetchOrders} from '../actions/businessUser/businessUserAction'
 
 function Performance() {
+    const dispatch = useDispatch()
+    const [dateRange, setDateRange] = useState('30days')
+    const dashboardData = useSelector(state => state.businessUser.dashboardData)
+
+    useEffect(() => {
+        dispatch(fetchDashboardData())
+    }, [dispatch])
+
+    console.log(dashboardData)
+
+    const handleChange = event => {
+        setDateRange(event.target.value)
+    }
+
+    const intervalLabel =
+        dateRange === '30days' ? 'Last 30 days' : dateRange === '90days' ? 'Last 90 days' : 'Since Joined'
+
+    const filteredData = useMemo(() => {
+        const today = new Date()
+        let startDate
+
+        if (dateRange === '30days') {
+            startDate = new Date(today)
+            startDate.setDate(today.getDate() - 30)
+        } else if (dateRange === '90days') {
+            startDate = new Date(today)
+            startDate.setDate(today.getDate() - 90)
+        } else {
+            return dashboardData.filter(order => order.status === 'Completed')
+        }
+
+        return dashboardData.filter(order => new Date(order.createdAt) >= startDate && order.status === 'Completed')
+    }, [dateRange, dashboardData])
+
+    const data = [
+        {
+            title: '訂單',
+            interval: intervalLabel,
+            data: filteredData.map(order => ({date: order.createdAt, value: 1})) // Each order counts as 1
+        },
+        {
+            title: '營收',
+            interval: intervalLabel,
+            data: filteredData.map(order => ({date: order.createdAt, value: order.totalPrice}))
+        }
+    ]
+
     return (
-        <Box>
-            <Grid
-                container
-                spacing={2}
-                columns={12}
-                sx={{mb: (theme) => theme.spacing(2)}}
-            >
+        <Box sx={{position: 'relative', width: '100%'}}>
+            <Box sx={{display: 'flex', justifyContent: 'flex-end'}}>
+                <FormControl variant="outlined" sx={{mb: 2, minWidth: 180}}>
+                    <Select
+                        value={dateRange}
+                        onChange={handleChange}
+                        displayEmpty
+                        IconComponent={KeyboardArrowDownIcon}
+                        renderValue={() => (
+                            <Box sx={{display: 'flex', alignItems: 'center', gap: 1}}>
+                                <CalendarTodayIcon fontSize="small" />
+                                <Typography>{intervalLabel}</Typography>
+                            </Box>
+                        )}
+                        sx={{
+                            border: 'none',
+                            backgroundColor: 'transparent',
+                            borderRadius: 1,
+                            paddingLeft: 1,
+                            '& .MuiSelect-select': {
+                                display: 'flex',
+                                alignItems: 'center'
+                            }
+                        }}
+                    >
+                        <MenuItem value="30days">Last 30 Days</MenuItem>
+                        <MenuItem value="90days">Last 90 Days</MenuItem>
+                        <MenuItem value="sinceJoined">Since Joined</MenuItem>
+                    </Select>
+                </FormControl>
+            </Box>
+
+            <Grid container spacing={2} columns={9} sx={{mb: theme => theme.spacing(2)}}>
                 {data.map((card, index) => (
                     <Grid key={index} size={{xs: 12, sm: 6, lg: 3}}>
-                        <StatCard {...card} />
+                        <StatCard title={card.title} interval={card.interval} data={card.data} dateRange={dateRange} />
                     </Grid>
                 ))}
                 {/*<Grid size={{ xs: 12, sm: 6, lg: 3 }}>*/}
                 {/*  <HighlightedCard />*/}
                 {/*</Grid>*/}
                 <Grid size={{xs: 12, md: 6}}>
-                    <SessionsChart />
+                    <SessionsChart dateRange={dateRange} />
                 </Grid>
                 <Grid size={{xs: 12, md: 6}}>
-                    <PageViewsBarChart />
+                    <PageViewsBarChart dateRange={dateRange} />
                 </Grid>
             </Grid>
         </Box>
-
     )
 }
 
