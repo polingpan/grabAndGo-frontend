@@ -7,16 +7,18 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import {useDispatch, useSelector} from 'react-redux'
 import PageViewsBarChart from './components/PageViewsBarChart'
 import SessionsChart from './components/SessionsChart'
-import {fetchOrders} from '../actions/businessUser/businessUserAction'
+import {fetchDashboardData, fetchOrders} from '../actions/businessUser/businessUserAction'
 
 function Performance() {
     const dispatch = useDispatch()
     const [dateRange, setDateRange] = useState('30days')
-    const orders = useSelector(state => state.businessUser.orders)
+    const dashboardData = useSelector(state => state.businessUser.dashboardData)
 
     useEffect(() => {
-        dispatch(fetchOrders())
+        dispatch(fetchDashboardData())
     }, [dispatch])
+
+    console.log(dashboardData)
 
     const handleChange = event => {
         setDateRange(event.target.value)
@@ -36,11 +38,11 @@ function Performance() {
             startDate = new Date(today)
             startDate.setDate(today.getDate() - 90)
         } else {
-            return orders.filter(order => order.status === 'Completed')
+            return dashboardData.filter(order => order.status === 'Completed')
         }
 
-        return orders.filter(order => new Date(order.createdAt) >= startDate && order.status === 'Completed')
-    }, [dateRange, orders])
+        return dashboardData.filter(order => new Date(order.createdAt) >= startDate && order.status === 'Completed')
+    }, [dateRange, dashboardData])
 
     const data = [
         {
