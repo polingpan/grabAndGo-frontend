@@ -5,8 +5,11 @@ import {useNavigate} from 'react-router-dom'
 import axiosInstance from '../axiosConfig'
 import {useDispatch} from 'react-redux'
 import {setBusinessUserInfo} from '../actions/businessUser/businessUserAction'
+import {useState} from 'react'
+import {Alert} from '@mui/material'
 
 function Login() {
+    const [loginError, setLoginError] = useState('')
     const schema = yup.object().shape({
         email: yup.string().required('此為必填欄位').email('請輸入有效電子郵件'),
         password: yup.string().trim().min(6, '密碼必須至少包含 6 個字符').max(20, '密碼不能超過 20 個字符')
@@ -26,6 +29,7 @@ function Login() {
                         validationSchema={schema}
                         validateOnMount={true}
                         onSubmit={async (values, {setSubmitting}) => {
+                            setLoginError('')
                             try {
                                 const response = await axiosInstance.post('/auth/business-login', values)
 
@@ -35,16 +39,29 @@ function Login() {
 
                                     navigate('/dashboard')
                                 } else {
-                                    console.error('Error:', response.statusText)
+                                    setLoginError('Login failed. Please try again.')
                                 }
                             } catch (error) {
-                                console.error('Error:', error.message || error)
+                                console.error('Error:', error.response.data.message)
+                                setLoginError(error.response.data.message)
                             }
                             setSubmitting(false)
                         }}
                     >
                         {({errors, touched, isSubmitting, isValid, values}) => (
                             <Form>
+                                {loginError && (
+                                    <Alert
+                                        severity="error"
+                                        sx={{
+                                            margin: '0 0 1rem 0',
+                                            borderRadius: '30px',
+                                            width: '100%'
+                                        }}
+                                    >
+                                        {loginError}
+                                    </Alert>
+                                )}
                                 <div style={{textAlign: 'left'}}>
                                     <Field
                                         name="email"
@@ -69,9 +86,7 @@ function Login() {
                                 <button
                                     type="submit"
                                     className="loginBtn"
-                                    disabled={
-                                        !isValid || isSubmitting || !values.email || !values.password // Disable if form is invalid or fields are empty
-                                    }
+                                    disabled={!isValid || isSubmitting || !values.email || !values.password}
                                 >
                                     登入
                                 </button>
