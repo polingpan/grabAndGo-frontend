@@ -18,8 +18,6 @@ function Performance() {
         dispatch(fetchDashboardData())
     }, [dispatch])
 
-    console.log(dashboardData)
-
     const handleChange = event => {
         setDateRange(event.target.value)
     }

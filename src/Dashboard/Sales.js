@@ -10,6 +10,7 @@ function Sales() {
     const dispatch = useDispatch()
     const orders = useSelector(state => state.businessUser.orders)
     const totalOrders = useSelector(state => state.businessUser.totalOrders)
+    const searchTerm = useSelector(state => state.businessUser.searchTerm)
 
     const [paginationModel, setPaginationModel] = useState({
         page: 0,
@@ -17,8 +18,8 @@ function Sales() {
     })
 
     useEffect(() => {
-        dispatch(fetchOrders(paginationModel.page, paginationModel.pageSize))
-    }, [dispatch, paginationModel])
+        dispatch(fetchOrders(paginationModel.page, paginationModel.pageSize, searchTerm))
+    }, [dispatch, paginationModel, searchTerm])
 
     const formattedOrders = orders.map(order => ({
         id: order._id,

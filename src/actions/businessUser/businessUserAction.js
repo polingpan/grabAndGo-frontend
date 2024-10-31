@@ -5,7 +5,8 @@ export const businessUserActionType = {
     SET_BUSINESS_USER_INFO: 'SET_BUSINESS_USER_INFO',
     CLEAR_BUSINESS_USER_INFO: 'CLEAR_BUSINESS_USER_INFO',
     FETCH_ORDERS_SUCCESS: 'FETCH_ORDERS_SUCCESS',
-    FETCH_DATA_SUCCESS: 'FETCH_DATA_SUCCESS'
+    FETCH_DATA_SUCCESS: 'FETCH_DATA_SUCCESS',
+    SET_ORDERS_SEARCH_TERM: 'SET_ORDERS_SEARCH_TERM'
 }
 
 export const setBusinessUserInfo = token => dispatch => {
@@ -26,11 +27,14 @@ export const businessLogout = () => ({
     type: businessUserActionType.CLEAR_BUSINESS_USER_INFO
 })
 
-export const fetchOrders = (page, pageSize) => {
+export const fetchOrders = (page, pageSize, searchTerm) => {
     return async dispatch => {
         try {
-            const response = await axiosInstance.get(`/orders?page=${page}&limit=${pageSize}`)
-            console.log(response.data)
+            let url = `/orders?page=${page}&limit=${pageSize}`
+            if (searchTerm) {
+                url += `&search=${encodeURIComponent(searchTerm)}`
+            }
+            const response = await axiosInstance.get(url)
             dispatch({
                 type: businessUserActionType.FETCH_ORDERS_SUCCESS,
                 payload: {
@@ -52,5 +56,11 @@ export const fetchDashboardData = () => {
         } catch (error) {
             dispatch({type: 'FETCH_DATA_FAILURE', payload: error})
         }
+    }
+}
+
+export const setOrdersSearchTerm = searchTerm => {
+    return async dispatch => {
+        dispatch({type: businessUserActionType.SET_ORDERS_SEARCH_TERM, payload: searchTerm})
     }
 }

@@ -5,6 +5,7 @@ const initialState = {
     orders: [],
     totalPage: 0,
     totalOrders: 0,
+    searchTerm: '',
     dashboardData: []
 }
 
@@ -35,6 +36,11 @@ export const businessUserReducer = (state = initialState, action) => {
             return {
                 ...state,
                 dashboardData: action.payload
+            }
+        case businessUserActionType.SET_ORDERS_SEARCH_TERM:
+            return {
+                ...state,
+                searchTerm: action.payload
             }
         default:
             return state
