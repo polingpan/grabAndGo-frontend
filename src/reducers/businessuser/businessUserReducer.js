@@ -3,6 +3,8 @@ import {businessUserActionType} from '../../actions/businessUser/businessUserAct
 const initialState = {
     storeInfo: {storeName: null, email: null, storeAddress: null, phoneNumber: null},
     orders: [],
+    totalPage: 0,
+    totalOrders: 0,
     dashboardData: []
 }
 
@@ -25,7 +27,8 @@ export const businessUserReducer = (state = initialState, action) => {
         case businessUserActionType.FETCH_ORDERS_SUCCESS:
             return {
                 ...state,
-                orders: action.payload
+                orders: action.payload.orders,
+                totalOrders: action.payload.totalOrders
             }
 
         case businessUserActionType.FETCH_DATA_SUCCESS:

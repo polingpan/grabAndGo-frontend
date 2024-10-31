@@ -4,14 +4,21 @@ import CustomizedDataGrid from './components/CustomizedDataGrid'
 import {useEffect} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 import {fetchOrders} from '../actions/businessUser/businessUserAction'
+import {useState} from 'react'
 
 function Sales() {
     const dispatch = useDispatch()
     const orders = useSelector(state => state.businessUser.orders)
+    const totalOrders = useSelector(state => state.businessUser.totalOrders)
+
+    const [paginationModel, setPaginationModel] = useState({
+        page: 0,
+        pageSize: 10
+    })
 
     useEffect(() => {
-        dispatch(fetchOrders())
-    }, [dispatch])
+        dispatch(fetchOrders(paginationModel.page, paginationModel.pageSize))
+    }, [dispatch, paginationModel])
 
     const formattedOrders = orders.map(order => ({
         id: order._id,
@@ -30,7 +37,12 @@ function Sales() {
         <Box sx={{width: '100%', maxWidth: {sm: '100%', md: '1700px'}}}>
             <Grid container spacing={2} columns={12}>
                 <Grid size={{xs: 12, lg: 12}}>
-                    <CustomizedDataGrid rows={formattedOrders} />
+                    <CustomizedDataGrid
+                        rows={formattedOrders}
+                        paginationModel={paginationModel}
+                        setPaginationModel={setPaginationModel}
+                        totalOrders={totalOrders}
+                    />
                 </Grid>
                 {/*<Grid size={{xs: 12, lg: 3}}>*/}
                 {/*    <Stack gap={2} direction={{xs: 'column', sm: 'row', lg: 'column'}}>*/}
