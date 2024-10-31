@@ -37,10 +37,10 @@ export const fetchOrders = () => {
     }
 }
 
-export const fetchDashboardData=()=>{
+export const fetchDashboardData=(days)=>{
     return async dispatch => {
         try{
-            const response=await axiosInstance.get('/business-users')
+            const response=await axiosInstance.get('/business-users',{params:{days}})
             dispatch({type:businessUserActionType.FETCH_DATA_SUCCESS, payload:response.data.data})
         } catch(error){
             dispatch({type: 'FETCH_DATA_FAILURE', payload: error})
