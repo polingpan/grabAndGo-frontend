@@ -6,7 +6,9 @@ const initialState = {
     totalPage: 0,
     totalOrders: 0,
     searchTerm: '',
-    dashboardData: []
+    dashboardData: [],
+    startDate: null,
+    endDate: null
 }
 
 export const businessUserReducer = (state = initialState, action) => {
@@ -41,6 +43,12 @@ export const businessUserReducer = (state = initialState, action) => {
             return {
                 ...state,
                 searchTerm: action.payload
+            }
+        case businessUserActionType.SET_DATE_SELECTION:
+            return {
+                ...state,
+                startDate: action.payload.startDate,
+                endDate: action.payload.endDate
             }
         default:
             return state

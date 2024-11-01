@@ -6,7 +6,8 @@ export const businessUserActionType = {
     CLEAR_BUSINESS_USER_INFO: 'CLEAR_BUSINESS_USER_INFO',
     FETCH_ORDERS_SUCCESS: 'FETCH_ORDERS_SUCCESS',
     FETCH_DATA_SUCCESS: 'FETCH_DATA_SUCCESS',
-    SET_ORDERS_SEARCH_TERM: 'SET_ORDERS_SEARCH_TERM'
+    SET_ORDERS_SEARCH_TERM: 'SET_ORDERS_SEARCH_TERM',
+    SET_DATE_SELECTION: 'SET_DATE_SELECTION'
 }
 
 export const setBusinessUserInfo = token => dispatch => {
@@ -27,12 +28,18 @@ export const businessLogout = () => ({
     type: businessUserActionType.CLEAR_BUSINESS_USER_INFO
 })
 
-export const fetchOrders = (page, pageSize, searchTerm) => {
+export const fetchOrders = (page, pageSize, searchTerm, startDate, endDate) => {
     return async dispatch => {
         try {
             let url = `/orders?page=${page}&limit=${pageSize}`
             if (searchTerm) {
                 url += `&search=${encodeURIComponent(searchTerm)}`
+            }
+            if (startDate) {
+                url += `&startDate=${encodeURIComponent(startDate)}`
+            }
+            if (endDate) {
+                url += `&endDate=${encodeURIComponent(endDate)}`
             }
             const response = await axiosInstance.get(url)
             dispatch({
@@ -62,5 +69,14 @@ export const fetchDashboardData = () => {
 export const setOrdersSearchTerm = searchTerm => {
     return async dispatch => {
         dispatch({type: businessUserActionType.SET_ORDERS_SEARCH_TERM, payload: searchTerm})
+    }
+}
+
+export const setDateSelection = (startDate, endDate) => {
+    return async dispatch => {
+        dispatch({
+            type: businessUserActionType.SET_DATE_SELECTION,
+            payload: {startDate: startDate, endDate: endDate}
+        })
     }
 }
