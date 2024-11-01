@@ -1,19 +1,23 @@
 import * as React from 'react'
 import {DataGrid} from '@mui/x-data-grid'
-import {columns, rows} from '../internals/data/gridData'
+import {columns} from '../internals/data/gridData'
 
-export default function CustomizedDataGrid({rows}) {
+export default function CustomizedDataGrid({rows, paginationModel, setPaginationModel, totalOrders}) {
     return (
         <DataGrid
             autoHeight
             checkboxSelection
+            rowCount={totalOrders}
             rows={rows}
             columns={columns}
+            pageSizeOptions={[10, 20, 50]}
+            paginationModel={paginationModel}
+            onPaginationModelChange={setPaginationModel}
+            paginationMode="server"
             getRowClassName={params => (params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd')}
             initialState={{
-                pagination: {paginationModel: {pageSize: 20}}
+                pagination: {paginationModel: {pageSize: 10}}
             }}
-            pageSizeOptions={[10, 20, 50]}
             disableColumnResize
             density="compact"
             slotProps={{

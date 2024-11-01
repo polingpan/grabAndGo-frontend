@@ -15,11 +15,10 @@ function Performance() {
     const dashboardData = useSelector(state => state.businessUser.dashboardData)
 
     useEffect(() => {
-        const days = dateRange === '30days' ? 30 : dateRange === '90days' ? 90 : undefined;
-        dispatch(fetchDashboardData(days));
-    }, [dispatch, dateRange]);
+        const days = dateRange === '30days' ? 30 : dateRange === '90days' ? 90 : undefined
+        dispatch(fetchDashboardData(days))
+    }, [dispatch, dateRange])
 
-    console.log(dashboardData)
     const handleChange = event => {
         setDateRange(event.target.value)
     }
