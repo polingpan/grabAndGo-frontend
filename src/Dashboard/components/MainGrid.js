@@ -15,6 +15,7 @@ import Sales from '../Sales'
 import Performance from '../Performance'
 import Home from '../Home'
 import {useParams} from 'react-router-dom'
+import Orders from '../Orders'
 
 export default function MainGrid({selectedItem}) {
     let content
@@ -25,6 +26,9 @@ export default function MainGrid({selectedItem}) {
             break
         case '銷售紀錄':
             content = <Sales />
+            break
+        case '今日訂單':
+            content = <Orders />
             break
         default:
             content = <Home />

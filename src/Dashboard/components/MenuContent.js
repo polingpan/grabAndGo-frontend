@@ -15,9 +15,11 @@ import HelpRoundedIcon from '@mui/icons-material/HelpRounded'
 import ReceiptIcon from '@mui/icons-material/Receipt'
 import {useNavigate} from 'react-router-dom'
 import {useTheme} from '@mui/material/styles'
+import LocalMallRoundedIcon from '@mui/icons-material/LocalMallRounded'
 
 const mainListItems = [
     {text: '主頁', icon: <HomeRoundedIcon />, path: 'home'},
+    {text: '今日訂單', icon: <LocalMallRoundedIcon />, path: 'orders'},
     {text: '業績分析', icon: <AnalyticsRoundedIcon />, path: 'performance'},
     {text: '銷售紀錄', icon: <ReceiptIcon />, path: 'sales'}
 ]
