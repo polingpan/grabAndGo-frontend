@@ -7,9 +7,16 @@ import {useDispatch} from 'react-redux'
 import {setBusinessUserInfo} from '../actions/businessUser/businessUserAction'
 import {useState} from 'react'
 import {Alert} from '@mui/material'
+import Visibility from '@mui/icons-material/Visibility'
+import VisibilityOff from '@mui/icons-material/VisibilityOff'
+import InputAdornment from '@mui/material/InputAdornment'
+import IconButton from '@mui/material/IconButton'
+import {OutlinedInput} from '@mui/material'
 
 function Login() {
     const [loginError, setLoginError] = useState('')
+    const [showPassword, setShowPassword] = useState(false)
+
     const schema = yup.object().shape({
         email: yup.string().required('此為必填欄位').email('請輸入有效電子郵件'),
         password: yup.string().trim().min(6, '密碼必須至少包含 6 個字符').max(20, '密碼不能超過 20 個字符')
@@ -17,6 +24,16 @@ function Login() {
 
     const navigate = useNavigate()
     const dispatch = useDispatch()
+
+    const handleClickShowPassword = () => setShowPassword(show => !show)
+
+    const handleMouseDownPassword = event => {
+        event.preventDefault()
+    }
+
+    const handleMouseUpPassword = event => {
+        event.preventDefault()
+    }
 
     return (
         <div className="pageWrapper">
@@ -64,19 +81,50 @@ function Login() {
                                 )}
                                 <div style={{textAlign: 'left'}}>
                                     <Field
+                                        as={OutlinedInput}
                                         name="email"
                                         type="email"
                                         placeholder="電子郵件"
                                         className={`input ${errors.email && touched.email ? 'error' : ''}`}
+                                        sx={{
+                                            boxSizing: 'unset',
+                                            borderRadius: '30px',
+                                            padding: '10px',
+                                            paddingRight: '14px',
+                                            fontSize: '14px'
+                                        }}
                                     />
                                     <ErrorMessage name="email" component="div" className="error" />
                                 </div>
                                 <div style={{textAlign: 'left'}}>
                                     <Field
                                         name="password"
-                                        type="password"
+                                        as={OutlinedInput}
+                                        type={showPassword ? 'text' : 'password'}
                                         placeholder="密碼"
                                         className={`input ${errors.password && touched.password ? 'error' : ''}`}
+                                        endAdornment={
+                                            <InputAdornment position="end">
+                                                <IconButton
+                                                    aria-label={
+                                                        showPassword ? 'hide the password' : 'display the password'
+                                                    }
+                                                    onClick={handleClickShowPassword}
+                                                    onMouseDown={handleMouseDownPassword}
+                                                    onMouseUp={handleMouseUpPassword}
+                                                    edge="end"
+                                                >
+                                                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                                                </IconButton>
+                                            </InputAdornment>
+                                        }
+                                        sx={{
+                                            boxSizing: 'unset',
+                                            borderRadius: '30px',
+                                            padding: '10px',
+                                            paddingRight: '14px',
+                                            fontSize: '14px'
+                                        }}
                                     />
                                     <ErrorMessage name="password" component="div" className="error" />
                                 </div>
