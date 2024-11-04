@@ -7,7 +7,9 @@ export const businessUserActionType = {
     FETCH_ORDERS_SUCCESS: 'FETCH_ORDERS_SUCCESS',
     FETCH_DATA_SUCCESS: 'FETCH_DATA_SUCCESS',
     SET_ORDERS_SEARCH_TERM: 'SET_ORDERS_SEARCH_TERM',
-    SET_DATE_SELECTION: 'SET_DATE_SELECTION'
+    SET_DATE_SELECTION: 'SET_DATE_SELECTION',
+    FETCH_TODAY_PICKUP_ORDER: 'FETCH_TODAY_PICKUP_ORDER',
+    UPDATE_ORDER_STATUS: 'UPDATE_ORDER_STATUS'
 }
 
 export const setBusinessUserInfo = token => dispatch => {
@@ -78,5 +80,33 @@ export const setDateSelection = (startDate, endDate) => {
             type: businessUserActionType.SET_DATE_SELECTION,
             payload: {startDate: startDate, endDate: endDate}
         })
+    }
+}
+
+export const fetchTodayPickupOrder = () => {
+    return async dispatch => {
+        try {
+            const response = await axiosInstance.get('/orders/today')
+            dispatch({
+                type: businessUserActionType.FETCH_TODAY_PICKUP_ORDER,
+                payload: response.data.orders
+            })
+        } catch (error) {
+            console.error(error.message)
+        }
+    }
+}
+
+export const updateOrderStatus = orderId => {
+    return async dispatch => {
+        try {
+            const response = await axiosInstance.put('/orders/status', null, {params: {orderId: orderId}})
+            const updatedOrder = response.data.order
+            dispatch({type: businessUserActionType.UPDATE_ORDER_STATUS, payload: response.data.order})
+            return {success: true, message: response.data.message}
+        } catch (error) {
+            console.error(error)
+            return {success: false, message: error.response?.data?.message}
+        }
     }
 }

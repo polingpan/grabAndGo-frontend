@@ -8,7 +8,8 @@ const initialState = {
     searchTerm: '',
     dashboardData: [],
     startDate: null,
-    endDate: null
+    endDate: null,
+    todayOrders: []
 }
 
 export const businessUserReducer = (state = initialState, action) => {
@@ -49,6 +50,18 @@ export const businessUserReducer = (state = initialState, action) => {
                 ...state,
                 startDate: action.payload.startDate,
                 endDate: action.payload.endDate
+            }
+        case businessUserActionType.FETCH_TODAY_PICKUP_ORDER:
+            return {
+                ...state,
+                todayOrders: action.payload
+            }
+        case businessUserActionType.UPDATE_ORDER_STATUS:
+            return {
+                ...state,
+                todayOrders: state.todayOrders.map(order =>
+                    order._id === action.payload._id ? {...order, status: action.payload.status} : order
+                )
             }
         default:
             return state
